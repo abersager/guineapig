@@ -1,0 +1,71 @@
+Usage: guineapig [options]
+
+General options:
+
+--baseUrl BASE_URL          Base URL of system under test.
+                            (default: http://localhost)
+
+--verbose                   Be more verbose.
+
+--help                      Display this information.
+
+Cucumber options:
+
+--features FEATURE_DIR      Location of feature files.
+                            (default: features)
+
+--step STEP_DEFINITION_DIR  Location of step definitions.
+                            (default: features/step_definitions)
+
+--tags TAG_EXPRESSION       Only execute the features or scenarios with tags
+                            matching TAG_EXPRESSION. Scenarios inherit tags
+                            declared on the Feature level. The simplest
+                            TAG_EXPRESSION is simply a tag. Example:
+                              --tags @dev
+
+                            When a tag in a tag expression starts with a ~,
+                            this represents boolean NOT. Example:
+                              --tags ~@dev
+
+                            A tag expression can have several tags separated
+                            by a comma, which represents logical OR. Example:
+                              --tags @dev,@wip
+
+                            The --tags option can be specified several times,
+                            and this represents logical AND. Example:
+                              --tags @foo,~@bar --tags @zap.
+
+                            This represents the following boolean expression:
+                            (@foo || !@bar) && @zap.
+
+                            Beware that if you want to use several negative
+                            tags to exclude several tags you have to use
+                            logical AND: --tags ~@fixme --tags ~@buggy.
+
+--format FORMAT             How to format features (default: progress).
+                            Available formats:
+                                pretty  : prints the feature as is
+                                progress: prints one character per scenario
+                                json    : prints the feature as JSON
+                                summary : prints a summary only, after all
+                                          scenarios were executed
+
+
+Webdriver options:
+
+--browserName BROWSER       Desired browser.
+                            (default: firefox)
+
+--browserVersion VERSION    Desired browser version
+
+--browserPlatform PLATFORM  Desired browser operating system
+
+--driverUrl DRIVER_URL      Webdriver URL
+                            (default: localhost)
+
+--driverPort DRIVER_PORT    Webdriver port
+                            (default: 4444)
+
+--driverUser DRIVER_USER    Webdriver username
+
+--driverKey DRIVER_KEY      Webdriver API key

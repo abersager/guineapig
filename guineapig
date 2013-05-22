@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+var options = require('optimist').argv;
+
+if (options.help) {
+  var pkg = require('./package.json');
+  var fs = require('fs');
+  var help = fs.readFileSync(__dirname + '/help.txt', "utf8");
+  console.log('Guineapig: ' + pkg.description + ' (v' + pkg.version + ')\n');
+  console.log(help);
+  return;
+}
+
+var World = require('./world')(options);
+var Cucumber = require('cucumber/lib/cucumber');
+Cucumber.SupportCode.WorldConstructor = function() {
+  return World;
+};
+
+var callback = function(succeeded) {
+  var code = succeeded ? 0 : 1;
+  var exitFunction = function() {
+    process.exit(code);
+  };
+
+  // --- exit after waiting for all pending output ---
+  var waitingIO = false;
+  process.stdout.on('drain', function() {
+    if (waitingIO) {
+      // the kernel buffer is now empty
+      exitFunction();
+    }
+  });
+  if (process.stdout.write("")) {
+    // no buffer left, exit now:
+    exitFunction();
+  } else {
+    // write() returned false, kernel buffer is not empty yet...
+    waitingIO = true;
+  }
+};
+
+var cucumberArgs = [
+  null,
+  null,
+  options.features || 'features',
+  '--require',
+  __dirname + '/setup.js',
+  '--require',
+  options.steps || 'features/step_definitions'
+];
+
+['format', 'tags'].forEach(function(opt) {
+  if (options[opt]) {
+    cucumberArgs.push('--' + opt, options[opt]);
+  }
+});
+
+var configuration = Cucumber.Cli.Configuration(cucumberArgs);
+var runtime = Cucumber.Runtime(configuration);
+var formatter = configuration.getFormatter();
+runtime.attachListener(formatter);
+runtime.start(callback);
+
+

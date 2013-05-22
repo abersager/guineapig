@@ -1,0 +1,19 @@
+{
+  "name": "guinepig",
+  "version": "0.1.0",
+  "description": "Cucumber.js + Webdriver framework",
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.2.x"
+  },
+  "preferGlobal": true,
+  "bin": {
+    "guineapig": "guineapig"
+  },
+  "dependencies": {
+    "expectations": "~0.1.6",
+    "wd-sync": "~1.0.1",
+    "cucumber": "~0.3.0",
+    "optimist": "~0.4.0"
+  }
+}
