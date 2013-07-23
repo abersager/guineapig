@@ -45,8 +45,15 @@ module.exports = function (options) {
     };
 
     this.remote = function (remoteFunction, args) {
-      var remoteString = 'return (' + remoteFunction.toString() + ').apply(this, arguments)';
-      return browser.execute(remoteString, args);
+      var remoteString = 'try { return (' + remoteFunction.toString() + ').apply(this, arguments) } catch (e) { e.error = true; return e };';
+      var result = browser.execute(remoteString, args);
+      if (result && result.error) {
+        // TODO report error properly
+        expect('##remote error##').toEqual(result.message || '##no details available##');
+        return;
+      } else {
+        return result;
+      }
     };
 
     sync(function () {
